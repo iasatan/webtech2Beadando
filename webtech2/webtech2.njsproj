@@ -28,25 +28,28 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="public\js\angular.min.js" />
     <Compile Include="app.js" />
-    <Content Include="html\edit.html">
+    <Content Include="public\html\edit.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="index.html">
+    <Content Include="public\html\index.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Képkivágás.PNG" />
-    <Content Include="login.html">
+    <Content Include="public\html\login.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="logout.html">
+    <Content Include="public\html\logout.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="html\" />
+    <Folder Include="public\html\" />
+    <Folder Include="public\" />
+    <Folder Include="public\js\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

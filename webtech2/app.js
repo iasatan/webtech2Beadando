@@ -3,15 +3,15 @@ var app = express();
 var userName = "";
 var age = 1;
 
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
 //**********************************************
 app.get('/', function (req, res) {
     if (userName == "") {
-        res.sendFile(__dirname + "/" + "login.html");
+        res.sendFile(__dirname + "/public/html/" + "login.html");
     }
     else {
-        res.sendFile(__dirname + "/" + "index.html");
+        res.sendFile(__dirname + "/public/html/" + "index.html");
         console.log("index");
     }
     
@@ -20,28 +20,27 @@ app.get('/user', function (req, res) {
     res.send(userName);
 })
 app.get('/age', function (req, res) {
-    res.send(age);
+    res.send(age.toString());
 })
 
 app.get('/login', function (req, res) {
     userName = req.query.userName;
-    res.sendFile(__dirname + "/" + "index.html");
+    res.sendFile(__dirname + "/public/html/" + "index.html");
 })
 
 app.get('/logOut', function (req, res) {
     console.log("logout");
-    res.sendFile(__dirname + "/" + "logout.html");
+    res.sendFile(__dirname + "/public/html/" + "logout.html");
     userName = "";
 })
 
 app.get('/edit', function (req, res) {
-    res.sendFile(__dirname + "/html/" + "edit.html");
-    console.log("edit");
+    res.sendFile(__dirname + "/public/html/" + "edit.html");
 })
 app.get('/editResponse', function (req, res) {
     userName = req.query.userName;
     age = req.query.age;
-    res.sendFile(__dirname + "/" + "index.html");
+    res.sendFile(__dirname + "/public/html/" + "index.html");
 })
 //**************************************************
 
