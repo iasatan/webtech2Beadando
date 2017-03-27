@@ -4,8 +4,21 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
 </head>
-<body>
+<body ng-app="index" ng-controller="indexCtrl">
+    <div id="user">
+        Welcome
+    </div>
 
+    <a href="edit">Edit User Settings</a>
+    <script>
+        var index = angular.module("index", []);
+        index.controller("indexCtrl", function ($scope, $http) {
+            angular.element(document).ready(function () {
+                $http.get('user').then(function (response) { document.getElementById('user').innerHTML += response.data; });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,21 @@
+﻿<html>
+<head><script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script></head>
+
+<body ng-controller="indexCtrl" ng-app="index">
+
+    <form action="http://127.0.0.1:8081/editResponse" method="GET">
+        User Name: <input type="text" name="userName" id="userName">  <br>
+        Age: <input type="number" name="age" id="age" /><br>
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+        var index = angular.module("index", []);
+        index.controller("indexCtrl", function ($scope, $http) {
+            angular.element(document).ready(function () {
+                $http.get('user').then(function (response) { document.getElementById('userName').value += response.data; });
+                $http.get('age').then(function (response) { document.getElementById('age').value += response.data; });
+            });
+        });
+    </script>
+</body>
+</html>
