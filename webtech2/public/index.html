@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+</head>
+<body ng-app="index" ng-controller="indexCtrl">
+    <div id="user">
+        Welcome
+    </div>
+    <a href="" ng-click="list()">List Books</a>
+    <div ng-repeat="x in books">
+        <table border="1">
+            <tr>
+                <td>Name:</td>
+                <td>{{ x.name }}</td>
+            </tr>
+            <tr>
+                <td>Genre:</td>
+                <td>{{ x.genre }}</td>
+            </tr>
+            <tr>
+                <td>Author:</td>
+                <td>{{ x.author }}</td>
+            </tr>
+            <tr>
+                <td>Available:</td>
+                <td>{{x.status}}</td>
+            </tr>
+            <tr>
+                <td>
+                    <form action="http://127.0.0.1:8081/requestBook" method="GET">
+                        <input hidden="hidden" name="name" value="{{ x.name }}" />
+                        <input type="submit" value="Request">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <a href="" ng-click="list2()">List Lends</a>
+    <div ng-repeat="x in lends">
+        Lends<br />
+        <table border="1">
+            <tr>
+                <td>User Name:</td>
+                <td>{{ x.name }}</td>
+            </tr>
+            <tr>
+                <td>Book name:</td>
+                <td>{{ x.book }}</td>
+            </tr>
+        </table>
+    </div>
+
+
+    <br />
+    <a href="listBooksBy">List books by</a>
+    <a href="edit">Edit User Settings</a><br />
+    <a href="logout">Log Out</a><br />
+
+    <script>
+        var index = angular.module("index", []);
+        index.controller("indexCtrl", function ($scope, $http) {
+            angular.element(document).ready(function () {
+                $http.get('user').then(function (response) { document.getElementById('user').innerHTML += response.data.userName; });
+                
+                
+            });
+            $scope.list = function () {
+                $http.get('books').then(function (response) {
+                    $scope.books = response.data.books
+                });
+            }
+            $scope.list2 = function () {
+                $http.get('myLends').then(function (response) {
+                    $scope.lends = response.data.a;
+                })
+            }
+            
+        });
+    </script>
+</body>
+</html>

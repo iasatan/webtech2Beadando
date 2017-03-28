@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Manage Books</title>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+</head>
+<body ng-app="manageBooks" ng-controller="manageBooksCtrl">
+    <form action="http://127.0.0.1:8081/addBook" method="GET">
+        Name of the Book: <input type="text" name="book">  <br>
+        Author of the Book: <select name="author"><option ng-repeat="x in authors">{{x}}</option></select><br>
+        Genre of the Book: <input type="text" name="genre">  <br>
+        <input type="submit" value="Submit">
+    </form>
+    <a href="books">Books</a><br />
+    <form action="http://127.0.0.1:8081/addAuthor" method="GET">
+        Name of the author: <input type="text" name="author">  <br>
+        <input type="submit" value="Submit">
+    </form>
+    <a href="authors">Authors</a>
+    <script>
+        var index = angular.module("manageBooks", []);
+        index.controller("manageBooksCtrl", function ($scope, $http) {
+            angular.element(document).ready(function () {
+                $http.get('authors').then(function (response) { $scope.authors = response.data });
+            });
+        });
+    </script>
+</body>
+</html>

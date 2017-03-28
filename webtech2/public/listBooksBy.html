@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Manage Books</title>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+</head>
+<body ng-app="manageBooks" ng-controller="manageBooksCtrl">
+    List By Genre <select name="author"><option ng-repeat="x in genres">{{x}}</option></select><br> <button ng-click="list">List</button>
+    <div id="list">
+
+    </div>
+    <script>
+        var index = angular.module("manageBooks", []);
+        index.controller("manageBooksCtrl", function ($scope, $http) {
+            angular.element(document).ready(function () {
+                $http.get('genres').then(function (response) { $scope.genres = response.data });
+            });
+            $scope.list = function () {
+                $http.get('listByGenre').then(function (response) {
+                    document.getElementById('list').innerHTML += response.data.name;
+                })
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+</head>
+<body ng-app="index" ng-controller="indexCtrl">
+    <div ng-repeat="x in books">
+        <table border="1">
+            <tr>
+                <td>Name:</td>
+                <td>{{ x.name }}</td>
+            </tr>
+            <tr>
+                <td>Genre:</td>
+                <td>{{ x.genre }}</td>
+            </tr>
+            <tr>
+                <td>Author:</td>
+                <td>{{ x.author }}</td>
+            </tr>
+            <tr>
+                <td>Status:</td>
+                <td><form action="http://127.0.0.1:8081/addBookInstance" method="GET">
+                    <input hidden="hidden" name="name" value="{{ x.name }}" />
+                    <input type="number" name="status" value="{{ x.status }}">  <br>
+                    <input type="submit" value="Submit">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <script>
+        var index = angular.module("index", []);
+        index.controller("indexCtrl", function ($scope, $http) {
+            angular.element(document).ready(function () {
+                $http.get('books').then(function (response) {
+                    $scope.books = response.data.books
+                });
+            });
+        });
+    </script>
+</body>
+</html>
