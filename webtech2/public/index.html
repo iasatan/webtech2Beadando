@@ -16,6 +16,7 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#"ng-click="closeAll()">Home</a></li>
                 <li><a href="#" ng-click="list()">List Books</a></li>
+                <li><a href="#" ng-click="list3()">List Books By</a></li>
                 <li><a href="#" ng-click="list2()">List Lends</a></li>
                 <li><a href="#" ng-click="edit()">Edit User</a></li>
                 <li><a href="#" ng-click="logout()">Log Out</a></li>
@@ -73,21 +74,92 @@
             </table>
         </div>
     </div>
-    
+    <div id="bookListBy">
+        <div class="container">
+            <h2>List by Genre</h2>
+            <form action="http://127.0.0.1:8081/listByGenre" method="GET">
+                <div class="form-group">
+                    <select name="genre"><option ng-repeat="x in genres">{{x}}</option></select>
+                </div>
+                <input type="submit" class="btn" value="Submit">
+            </form>
+        </div>
+        <div class="container">
+            <h2>List by Author</h2>
+            <form action="http://127.0.0.1:8081/listByAuthor" method="GET">
+                <div class="form-group">
+                    <select name="author"><option ng-repeat="x in authors">{{x}}</option></select>
+                </div>
+                <input type="submit" class="btn" value="Submit">
+            </form>
+        </div>
+        <div class="container">
+            <h2>List By status</h2>
+            <form action="http://127.0.0.1:8081/listByStatus" method="GET">
+                <div class="form-group">
+                    <select name="status"><option ng-repeat="x in status">{{x}}</option></select>
+                </div>
+                <input type="submit" class="btn" value="Submit">
+            </form>
+        </div>
+        <div id="bookList" class="container">
+            <div ng-repeat="x in books">
+                <table border="1" class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <td>Name:</td>
+                            <td>{{ x.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Genre:</td>
+                            <td>{{ x.genre }}</td>
+                        </tr>
+                        <tr>
+                            <td>Author:</td>
+                            <td>{{ x.author }}</td>
+                        </tr>
+                        <tr>
+                            <td>Available:</td>
+                            <td>
+                                {{x.status}} <form action="http://127.0.0.1:8081/requestBook" method="GET">
+                                    <input hidden="hidden" name="name" value="{{ x.name }}" />
+                                    <input type="submit" class="btn" value="Request">
+                                </form>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     
     <br />
     <a href="listBooksBy">List books by</a><br />
     
     <script>
-        var contentList = [document.getElementById('edit'), document.getElementById('lends'), document.getElementById('bookList')];
+        var contentList = [document.getElementById('edit'), document.getElementById('lends'), document.getElementById('bookList'), document.getElementById('bookListBy')];
         var index = angular.module("index", []);
         index.controller("indexCtrl", function ($scope, $http, $compile) {
             angular.element(document).ready(function () {
+                $http.get('genres').then(function (response) { $scope.genres = response.data });
+                $http.get('authors').then(function (response) { $scope.authors = response.data });
+                $http.get('status').then(function (response) { $scope.status = response.data });
+                $http.get('listBy').then(function (response) {
+                    $scope.books = response.data.books
+                });
                 $http.get('user').then(function (response) { document.getElementById('user').innerHTML += response.data.userName; });
                 for (var i = 0; i < contentList.length; i++) {
                     contentList[i].hidden = true;
                 }
             });
+            $scope.list3 = function () {
+                for (var i = 0; i < contentList.length; i++) {
+                    if (contentList[i].hidden == false)
+                        contentList[i].hidden = true;
+                }
+                document.getElementById('bookListBy').hidden = false;
+            }
             $scope.closeAll = function(){
                 for (var i = 0; i < contentList.length; i++) {
                     if (contentList[i].hidden == false)

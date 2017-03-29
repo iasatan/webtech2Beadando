@@ -41,9 +41,6 @@
     <Content Include="public\Librarian.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="public\listBooksBy.html">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="public\login.html">
       <SubType>Code</SubType>
     </Content>

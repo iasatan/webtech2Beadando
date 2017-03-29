@@ -1,16 +1,10 @@
 var express = require('express');
 var app = express();
-var user = {
-    userName: "",
-    name: "",
-    age: "",
-    type: "user"
-};
+var user = {userName: "", name: "", age: "", type: "user"};
 var requests = { request: [] };
 var lends = { lends: [] };
 var books = { books: [{ name: "Das gesunde PLUS", genre: "medical", author: "dm", status: 49 }, { name: "SUPERLIFE", genre: "electronics", author: "VARTA", status: 4 } ] };
-var authorts = ["Shrek", "VARTA", "dm"];
-var genres = ["medical", "electronics"];
+var listby = { books: [] };
 
 app.use(express.static(__dirname + '/public'));
 
@@ -33,16 +27,11 @@ app.get('/addBook', function (req, res) {
 
 app.get('/addBookInstance', function (req, res) {
     if (user.type == "Librarian") {
-        var tmpJSON;
-        var tmp2JSON = { a: [] };
         for (var i = 0; i < books['books'].length; i++) {
-            tmpJSON = (books['books'].pop());
-            if (tmpJSON.name == req.query.name) {
-                tmpJSON.status = req.query.status;
+            if (books['books'][i].name == req.query.name) {
+                books['books'][i].status = req.query.status;
             }
-            tmp2JSON['a'].push(tmpJSON);
         }
-        books['books'].push(tmp2JSON['a'].pop());
         res.sendFile(__dirname + "/public/Librarian.html");
     }
 })
@@ -55,30 +44,16 @@ app.get('/requests', function (req, res) {
 app.get('/lend', function (req, res) {
     if (user.type == 'Librarian') {
         lends['lends'].push({ "name": req.query.name, "book": req.query.book });
-
-        var tmpJSON;
-        var tmp2JSON = { a: [] };
         for (var i = 0; i < requests['request'].length; i++) {
-            tmpJSON = (requests['request'].pop());
-            if (tmpJSON.user == req.query.name && tmpJSON.book == req.query.book) {
-                tmpJSON = "";
-            }
-            else {
-                tmp2JSON['a'].push(tmpJSON);
+            if (requests['request'][i].user == req.query.name && requests['request'][i].book == req.query.book) {
+                requests['request'][i] = "";
             }
         }
-        requests['request'].push(tmp2JSON['a'].pop());
-
-        tmp2JSON = { a: [] };
         for (var i = 0; i < books['books'].length; i++) {
-            tmpJSON = books['books'].pop();
-            if (tmpJSON.name == req.query.book) {
-                tmpJSON.status--;
+            if (books['books'][i].name == req.query.book) {
+                books['books'][i].status--;
             }
-            tmp2JSON['a'].push(tmpJSON);
         }
-        books['books'].push(tmp2JSON['a'].pop());
-
         res.sendFile(__dirname + "/public/librarian.html");
     }
 })
@@ -101,39 +76,67 @@ app.get('/books', function (req, res) {
     res.send(books);
 })
 app.get('/authors', function (req, res) {
+    var authorts = [];
+    for (var i = 0; i < books['books'].length; i++) {
+        authorts.push(books['books'][i].author);
+    }
     res.send(authorts);
 })
 app.get('/books', function (req, res) {
     res.send(books);
 })
 app.get('/genres', function (req, res) {
+    var genres = [];
+    for (var i = 0; i < books['books'].length; i++) {
+        genres.push(books['books'][i].genre);
+    }
     res.send(genres);
 })
 app.get('/myLends', function (req, res) {
-    var tmpJSON;
     var tmp2JSON = { a: [] };
     for (var i = 0; i < lends['lends'].length; i++) {
-        tmpJSON = (lends['lends'].pop());
-        if (tmpJSON.name == user.userName) {
-            tmp2JSON['a'].push(tmpJSON);
+        if (lends['lends'][i].name == user.userName) {
+            tmp2JSON['a'].push(lends['lends'][i]);
         }
     }
     res.send(tmp2JSON);
 })
 app.get('/listByGenre', function (req, res) {
-    //var response = "<table border=1>";
-    var tmpJSON;
-    var tmp2JSON = { a: [] };
+    listby['books'] = [];
     for (var i = 0; i < books['books'].length; i++) {
-        tmpJSON = (books['books'].pop());
-        if (tmpJSON.genre == req.query.genre) {
-            //response += "<tr><td>Name</td><td>" + tmpJSON.name + "</td></tr><tr><td>Genre</td><td>" + tmpJSON.genre + "</td></tr><tr><td>author</td><td>" + tmpJSON.author + "</td></tr><tr><td>status</td><td>" + tmpJSON.status + "</td></tr>";
-            tmp2JSON['a'].push(tmpJSON);
+        if (books['books'][i].genre == req.query.genre) {
+            listby['books'].push(books['books'][i]);
         }
     }
-    //response += "</table>";
-    //res.send(response);
-    res.send(tmp2JSON);
+    res.sendFile(__dirname + "/public/index.html");
+})
+app.get('/listByAuthor', function (req, res) {
+    listby['books'] = [];
+    for (var i = 0; i < books['books'].length; i++) {
+        if (books['books'][i].author == req.query.author) {
+            listby['books'].push(books['books'][i]);
+        }
+    }
+    res.sendFile(__dirname + "/public/index.html");
+})
+app.get('/listByStatus', function (req, res) {
+    listby['books'] = [];
+    for (var i = 0; i < books['books'].length; i++) {
+        if (books['books'][i].status == req.query.status) {
+            listby['books'].push(books['books'][i]);
+        }
+    }
+    res.sendFile(__dirname + "/public/index.html");
+})
+app.get('/listBy', function(req, res) {
+    res.send(listby);
+})
+app.get('/status', function (req, res) {
+    var status = [];
+    for (var i = 0; i < books['books'].length; i++) {
+        status.push(books['books'][i].status);
+    }
+    res.send(status);
 })
 /*********************************************************************
 End of getters
