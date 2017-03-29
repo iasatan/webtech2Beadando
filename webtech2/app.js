@@ -3,8 +3,10 @@ var app = express();
 var user = {userName: "", name: "", age: "", type: "user"};
 var requests = { request: [] };
 var lends = { lends: [] };
-var books = { books: [{ name: "Das gesunde PLUS", genre: "medical", author: "dm", status: 49 }, { name: "SUPERLIFE", genre: "electronics", author: "VARTA", status: 4 } ] };
+var books = { books: [{ name: "Das gesunde PLUS", genre: "medical", author: "dm", status: 49 }, { name: "SUPERLIFE", genre: "electronics", author: "VARTA", status: 4 }] };
+var authors = ["dm", "VARTA"];
 var listby = { books: [] };
+var page="";
 
 app.use(express.static(__dirname + '/public'));
 
@@ -14,14 +16,16 @@ Librarian only
 
 app.get('/addAuthor', function (req, res) {
     if (user.type == "Librarian") {
-        authorts.push(req.query.author);
+        authors.push(req.query.author);
         res.sendFile(__dirname + "/public/Librarian.html");
+        page = "manageBooks";
     }
 })
 app.get('/addBook', function (req, res) {
     if (user.type == "Librarian") {
         books['books'].push({ "name": req.query.book, "genre": req.query.genre, "author": req.query.author, "status": 0 });
         res.sendFile(__dirname + "/public/Librarian.html");
+        page = "manageBooks";
     }
 })
 
@@ -33,6 +37,7 @@ app.get('/addBookInstance', function (req, res) {
             }
         }
         res.sendFile(__dirname + "/public/Librarian.html");
+        page = "manageInventory";
     }
 })
 
@@ -55,6 +60,7 @@ app.get('/lend', function (req, res) {
             }
         }
         res.sendFile(__dirname + "/public/librarian.html");
+        page = "requests";
     }
 })
 app.get('/lends', function (req, res) {
@@ -69,6 +75,9 @@ End of Librarian Only
 /*********************************************************************
 Getters
 **********************************************************************/
+app.get('/page', function (req, res) {
+    res.send(page);
+})
 app.get('/user', function (req, res) {
     res.send(user);
 })
@@ -76,11 +85,7 @@ app.get('/books', function (req, res) {
     res.send(books);
 })
 app.get('/authors', function (req, res) {
-    var authorts = [];
-    for (var i = 0; i < books['books'].length; i++) {
-        authorts.push(books['books'][i].author);
-    }
-    res.send(authorts);
+    res.send(authors);
 })
 app.get('/books', function (req, res) {
     res.send(books);
@@ -109,6 +114,7 @@ app.get('/listByGenre', function (req, res) {
         }
     }
     res.sendFile(__dirname + "/public/index.html");
+    page = "bookListBy";
 })
 app.get('/listByAuthor', function (req, res) {
     listby['books'] = [];
@@ -118,6 +124,7 @@ app.get('/listByAuthor', function (req, res) {
         }
     }
     res.sendFile(__dirname + "/public/index.html");
+    page = "bookListBy";
 })
 app.get('/listByStatus', function (req, res) {
     listby['books'] = [];
@@ -127,6 +134,7 @@ app.get('/listByStatus', function (req, res) {
         }
     }
     res.sendFile(__dirname + "/public/index.html");
+    page = "bookListBy";
 })
 app.get('/listBy', function(req, res) {
     res.send(listby);
@@ -150,10 +158,17 @@ app.get('/editResponse', function (req, res) {
     user.age = req.query.age;
     user.name = req.query.name;
     res.sendFile(__dirname + "/public/" + "index.html");
+    page = "edit";
 })
 app.get('/requestBook', function (req, res) {
     requests['request'].push({ "user": user.userName, "book": req.query.name });
     res.sendFile(__dirname + "/public/" + "index.html");
+    page = "bookList";
+})
+app.get('/requestBook2', function (req, res) {
+    requests['request'].push({ "user": user.userName, "book": req.query.name });
+    res.sendFile(__dirname + "/public/" + "index.html");
+    page = "bookListBy";
 })
 /*********************************************************************
 End of Setters

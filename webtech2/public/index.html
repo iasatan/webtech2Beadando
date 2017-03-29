@@ -14,7 +14,7 @@
                 <a class="navbar-brand" href="#">Könyvtár</a>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#"ng-click="closeAll()">Home</a></li>
+                <li class="active"><a href="#" ng-click="closeAll()">Home</a></li>
                 <li><a href="#" ng-click="list()">List Books</a></li>
                 <li><a href="#" ng-click="list3()">List Books By</a></li>
                 <li><a href="#" ng-click="list2()">List Lends</a></li>
@@ -27,7 +27,7 @@
         Welcome
     </div>
     <div id="edit">
-        
+
     </div>
     <div id="lends" class="container">
         <div ng-repeat="x in lends">
@@ -46,32 +46,36 @@
             </table>
         </div>
     </div>
-    <div id="bookList" class="container">
-        <div ng-repeat="x in books">
-            <table border="1" class="table table-hover">
-                <tbody>
-                    <tr>
-                        <td>Name:</td>
-                        <td>{{ x.name }}</td>
-                    </tr>
-                    <tr>
-                        <td>Genre:</td>
-                        <td>{{ x.genre }}</td>
-                    </tr>
-                    <tr>
-                        <td>Author:</td>
-                        <td>{{ x.author }}</td>
-                    </tr>
-                    <tr>
-                        <td>Available:</td>
-                        <td>{{x.status}} <form action="http://127.0.0.1:8081/requestBook" method="GET">
-    <input hidden="hidden" name="name" value="{{ x.name }}" />
-    <input type="submit" class="btn" value="Request">
-</form></td>
+    <div id="bookList">
+        <div class="container">
+            <div ng-repeat="x in books">
+                <table border="1" class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <td>Name:</td>
+                            <td>{{ x.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Genre:</td>
+                            <td>{{ x.genre }}</td>
+                        </tr>
+                        <tr>
+                            <td>Author:</td>
+                            <td>{{ x.author }}</td>
+                        </tr>
+                        <tr>
+                            <td>Available:</td>
+                            <td>
+                                {{x.status}} <form action="http://127.0.0.1:8081/requestBook" method="GET">
+                                    <input hidden="hidden" name="name" value="{{ x.name }}" />
+                                    <input type="submit" class="btn" value="Request">
+                                </form>
+                            </td>
 
-                    </tr>
-                </tbody>
-            </table>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div id="bookListBy">
@@ -121,7 +125,7 @@
                         <tr>
                             <td>Available:</td>
                             <td>
-                                {{x.status}} <form action="http://127.0.0.1:8081/requestBook" method="GET">
+                                {{x.status}} <form action="http://127.0.0.1:8081/requestBook2" method="GET">
                                     <input hidden="hidden" name="name" value="{{ x.name }}" />
                                     <input type="submit" class="btn" value="Request">
                                 </form>
@@ -133,10 +137,6 @@
             </div>
         </div>
     </div>
-    
-    <br />
-    <a href="listBooksBy">List books by</a><br />
-    
     <script>
         var contentList = [document.getElementById('edit'), document.getElementById('lends'), document.getElementById('bookList'), document.getElementById('bookListBy')];
         var index = angular.module("index", []);
@@ -152,6 +152,9 @@
                 for (var i = 0; i < contentList.length; i++) {
                     contentList[i].hidden = true;
                 }
+                $http.get('page').then(function (response) {
+                    document.getElementById(response.data).hidden = false;
+                })
             });
             $scope.list3 = function () {
                 for (var i = 0; i < contentList.length; i++) {
@@ -160,7 +163,7 @@
                 }
                 document.getElementById('bookListBy').hidden = false;
             }
-            $scope.closeAll = function(){
+            $scope.closeAll = function () {
                 for (var i = 0; i < contentList.length; i++) {
                     if (contentList[i].hidden == false)
                         contentList[i].hidden = true;
@@ -202,9 +205,9 @@
                 });
             }
             $scope.logout = function () {
-                open('logout',"_self");
+                open('logout', "_self");
             }
-            
+
         });
     </script>
 </body>
