@@ -30,6 +30,7 @@
   <ItemGroup>
     <Compile Include="public\js\angular.min.js" />
     <Compile Include="app.js" />
+    <Content Include="public\css\bootstrap.min.css" />
     <Content Include="public\edit.html">
       <SubType>Code</SubType>
     </Content>
@@ -46,19 +47,7 @@
     <Content Include="public\login.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="public\logout.html">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="package.json" />
-    <Content Include="public\manageBooks.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="public\manageInventory.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="public\manageRequests.html">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>

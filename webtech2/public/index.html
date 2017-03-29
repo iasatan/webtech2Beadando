@@ -4,79 +4,133 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
     <script type="text/javascript" src="js/angular.min.js"></script>
 </head>
 <body ng-app="index" ng-controller="indexCtrl">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Könyvtár</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#"ng-click="closeAll()">Home</a></li>
+                <li><a href="#" ng-click="list()">List Books</a></li>
+                <li><a href="#" ng-click="list2()">List Lends</a></li>
+                <li><a href="#" ng-click="edit()">Edit User</a></li>
+                <li><a href="#" ng-click="logout()">Log Out</a></li>
+            </ul>
+        </div>
+    </nav>
     <div id="user">
         Welcome
     </div>
-    <a href="" ng-click="list()">List Books</a>
-    <div ng-repeat="x in books">
-        <table border="1">
-            <tr>
-                <td>Name:</td>
-                <td>{{ x.name }}</td>
-            </tr>
-            <tr>
-                <td>Genre:</td>
-                <td>{{ x.genre }}</td>
-            </tr>
-            <tr>
-                <td>Author:</td>
-                <td>{{ x.author }}</td>
-            </tr>
-            <tr>
-                <td>Available:</td>
-                <td>{{x.status}}</td>
-            </tr>
-            <tr>
-                <td>
-                    <form action="http://127.0.0.1:8081/requestBook" method="GET">
-                        <input hidden="hidden" name="name" value="{{ x.name }}" />
-                        <input type="submit" value="Request">
-                    </form>
-                </td>
-            </tr>
-        </table>
+    <div id="edit">
+        
     </div>
-    <a href="" ng-click="list2()">List Lends</a>
-    <div ng-repeat="x in lends">
-        Lends<br />
-        <table border="1">
-            <tr>
-                <td>User Name:</td>
-                <td>{{ x.name }}</td>
-            </tr>
-            <tr>
-                <td>Book name:</td>
-                <td>{{ x.book }}</td>
-            </tr>
-        </table>
+    <div id="lends" class="container">
+        <div ng-repeat="x in lends">
+            Lends<br />
+            <table border="1" class="table table-hover">
+                <tbody>
+                    <tr>
+                        <td>User Name:</td>
+                        <td>{{ x.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Book name:</td>
+                        <td>{{ x.book }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+    <div id="bookList" class="container">
+        <div ng-repeat="x in books">
+            <table border="1" class="table table-hover">
+                <tbody>
+                    <tr>
+                        <td>Name:</td>
+                        <td>{{ x.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Genre:</td>
+                        <td>{{ x.genre }}</td>
+                    </tr>
+                    <tr>
+                        <td>Author:</td>
+                        <td>{{ x.author }}</td>
+                    </tr>
+                    <tr>
+                        <td>Available:</td>
+                        <td>{{x.status}} <form action="http://127.0.0.1:8081/requestBook" method="GET">
+    <input hidden="hidden" name="name" value="{{ x.name }}" />
+    <input type="submit" class="btn" value="Request">
+</form></td>
 
-
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    
     <br />
-    <a href="listBooksBy">List books by</a>
-    <a href="edit">Edit User Settings</a><br />
-    <a href="logout">Log Out</a><br />
-
+    <a href="listBooksBy">List books by</a><br />
+    
     <script>
+        var contentList = [document.getElementById('edit'), document.getElementById('lends'), document.getElementById('bookList')];
         var index = angular.module("index", []);
-        index.controller("indexCtrl", function ($scope, $http) {
+        index.controller("indexCtrl", function ($scope, $http, $compile) {
             angular.element(document).ready(function () {
                 $http.get('user').then(function (response) { document.getElementById('user').innerHTML += response.data.userName; });
-                
-                
+                for (var i = 0; i < contentList.length; i++) {
+                    contentList[i].hidden = true;
+                }
             });
+            $scope.closeAll = function(){
+                for (var i = 0; i < contentList.length; i++) {
+                    if (contentList[i].hidden == false)
+                        contentList[i].hidden = true;
+                }
+            }
             $scope.list = function () {
+                for (var i = 0; i < contentList.length; i++) {
+                    if (contentList[i].hidden == false)
+                        contentList[i].hidden = true;
+                }
+                document.getElementById('bookList').hidden = false;
                 $http.get('books').then(function (response) {
                     $scope.books = response.data.books
                 });
             }
             $scope.list2 = function () {
+                for (var i = 0; i < contentList.length; i++) {
+                    if (contentList[i].hidden == false)
+                        contentList[i].hidden = true;
+                }
+                document.getElementById('lends').hidden = false;
                 $http.get('myLends').then(function (response) {
                     $scope.lends = response.data.a;
                 })
+            }
+            $scope.edit = function () {
+                for (var i = 0; i < contentList.length; i++) {
+                    if (contentList[i].hidden == false)
+                        contentList[i].hidden = true;
+                }
+                document.getElementById('edit').hidden = false;
+                $http.get('edit').then(function (response) {
+                    document.getElementById('edit').innerHTML = response.data;
+                    $http.get('user').then(function (response) {
+                        document.getElementById('userName').value += response.data.userName;
+                        document.getElementById('age').value = response.data.age;
+                        document.getElementById('name').value = response.data.name;
+                    });
+                });
+            }
+            $scope.logout = function () {
+                open('logout',"_self");
             }
             
         });
