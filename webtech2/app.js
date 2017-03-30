@@ -60,7 +60,7 @@ app.get('/lend', function (req, res) {
                 books['books'][i].status--;
             }
         }
-        res.sendFile(__dirname + "/public/librarian.html");
+        res.sendFile(__dirname + "/public/Librarian.html");
         page = "requests";
     }
 })
