@@ -26,13 +26,13 @@
     <div id="user">
         Welcome
     </div>
-    <div id="manageBooks" class="container">
-        <form action="http://127.0.0.1:8081/addBook" method="GET">
+    <div id="manageBooks" class="container" ng-show="manageBooksDiv">
+        <form name="addBookForm" action="http://127.0.0.1:8081/addBook" method="GET">
             <table border="1" class="table">
                 <tbody>
                     <tr>
                         <td>Name of the Book:</td>
-                        <td><input type="text" name="book"></td>
+                        <td><input type="text" name="book" ng-model="book" required><span ng-show="addBookForm.book.$touched && addBookForm.book.$invalid">The name is required.</span></td>
                     </tr>
                     <tr>
                         <td>Author of the Book:</td>
@@ -40,26 +40,26 @@
                     </tr>
                     <tr>
                         <td>Genre of the Book:</td>
-                        <td><input type="text" name="genre"> <input type="submit" value="Submit"></td>
+                        <td><input type="text" name="genre" ng-model="genre" required> <span ng-show="addBookForm.book.$valid && addBookForm.genre.$valid"><input type="submit" value="Submit"></span><span ng-show="addBookForm.genre.$touched && addBookForm.genre.$invalid">The genre is required.</span></td>
                     </tr>
                 </tbody>
             </table>
         </form>
         <br>
         <div class="container">
-            <form action="http://127.0.0.1:8081/addAuthor" method="GET" class="form-inline">
+            <form name="addAuthorForm" action="http://127.0.0.1:8081/addAuthor" method="GET" class="form-inline">
                 <div class="form-group">
                     <label>Name of the Author:</label>
-                    <input type="text" class="form-control" name="author" placeholder="Enter name">
+                    <input type="text" class="form-control" name="author" placeholder="Enter name" ng-model="author" required>
                 </div>
-                <input type="submit" value="Submit">
+                <span ng-show="addAuthorForm.author.$valid"><input type="submit" value="Submit"></span>
             </form>
         </div>
     </div>
-    <div id="edit">
+    <div id="edit" ng-show="editDiv" ng-include="'edit'">
 
     </div>
-    <div id="manageInventory" class="container"> 
+    <div id="manageInventory" class="container" ng-show="manageInventoryDiv">
         <div ng-repeat="x in inventorryBooks">
             <table border="1" class="table table-hover">
                 <tbody>
@@ -78,20 +78,20 @@
                     <tr>
                         <td>Status:</td>
                         <td>
-                            <form action="http://127.0.0.1:8081/addBookInstance" method="GET">
+                            <form name="inventoryForm" action="http://127.0.0.1:8081/addBookInstance" method="GET">
                                 <input hidden="hidden" name="name" value="{{ x.name }}" />
-                                <input type="number" name="status" value="{{ x.status }}">  <br>
+                                <input type="number" name="status" value="{{ x.status }}" required min="0">  <br>
                                 <input type="submit" value="Submit">
                             </form>
                         </td>
                     </tr>
                 </tbody>
-                
+
             </table>
         </div>
     </div>
-    
-    <div id="requests">
+
+    <div id="requests" ng-show="requestsDiv">
         <div ng-repeat="x in request" class="container">
             Requests:<br />
             <table border="1" class="table">
@@ -146,50 +146,53 @@
                 $http.get('lends').then(function (response) {
                     $scope.lends = response.data.lends;
                 })
-                for (var i = 0; i < contentList.length; i++) {
-                    contentList[i].hidden = true;
-                }
                 $http.get('page').then(function (response) {
-                    document.getElementById(response.data).hidden = false;
+                    switch (response.data) {
+                        case "manageBooks":
+                            $scope.manageBooksDiv = true;
+                            break;
+                        case "manageInventory":
+                            $scope.manageInventoryDiv = true;
+                            break;
+                        case "requests":
+                            $scope.requestsDiv = true;
+                            break;
+                        case "edit":
+                            $scope.editDiv = true;
+                            break;
+                    }
                 })
             });
             $scope.list = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-                document.getElementById('requests').hidden = false;
+                $scope.requestsDiv = true;;
+                $scope.manageBooksDiv = false;
+                $scope.manageInventoryDiv = false;
+                $scope.editDiv = false;
             }
             $scope.inventory = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-                document.getElementById('manageInventory').hidden = false;
+                $scope.requestsDiv = false;;
+                $scope.manageBooksDiv = false;
+                $scope.manageInventoryDiv = true;
+                $scope.editDiv = false;
             }
 
             $scope.manageBooks = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-                document.getElementById('manageBooks').hidden = false;
+                $scope.requestsDiv = false;;
+                $scope.manageBooksDiv = true;
+                $scope.manageInventoryDiv = false;
+                $scope.editDiv = false;
             }
 
 
             $scope.edit = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-                document.getElementById('edit').hidden = false;
-                $http.get('edit').then(function (response) {
-                    document.getElementById('edit').innerHTML = response.data;
-                    $http.get('user').then(function (response) {
-                        document.getElementById('userName').value += response.data.userName;
-                        document.getElementById('age').value = response.data.age;
-                        document.getElementById('name').value = response.data.name;
-                    });
+                $scope.requestsDiv = false;;
+                $scope.manageBooksDiv = false;
+                $scope.manageInventoryDiv = false;
+                $scope.editDiv = true;
+                $http.get('user').then(function (response) {
+                    document.getElementById('userName').value += response.data.userName;
+                    document.getElementById('age').value = response.data.age;
+                    document.getElementById('name').value = response.data.name;
                 });
             }
             $scope.logout = function () {

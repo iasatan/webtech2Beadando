@@ -51,7 +51,8 @@ app.get('/lend', function (req, res) {
         lends['lends'].push({ "name": req.query.name, "book": req.query.book });
         for (var i = 0; i < requests['request'].length; i++) {
             if (requests['request'][i].user == req.query.name && requests['request'][i].book == req.query.book) {
-                requests['request'][i] = "";
+                requests['request'].splice(i, 1);
+                i--;
             }
         }
         for (var i = 0; i < books['books'].length; i++) {
@@ -158,10 +159,21 @@ app.get('/editResponse', function (req, res) {
     user.age = req.query.age;
     user.name = req.query.name;
     res.sendFile(__dirname + "/public/" + "index.html");
-    page = "edit";
 })
 app.get('/requestBook', function (req, res) {
-    requests['request'].push({ "user": user.userName, "book": req.query.name });
+    var lol = true;
+    if (requests['request'].length > 0) {
+        for (var i = 0; i < requests['request'].length; i++) {
+            if (requests['request'][i].user == user.userName && requests['request'][i].book == req.query.name) {
+                lol = false;
+                break;
+            }
+        }
+    }
+    if(lol) {
+        requests['request'].push({ "user": user.userName, "book": req.query.name });
+    }
+    lol = true;
     res.sendFile(__dirname + "/public/" + "index.html");
     page = "bookList";
 })
@@ -209,9 +221,6 @@ app.get('/logOut', function (req, res) {
 })
 app.get('/edit', function (req, res) {
     res.sendFile(__dirname + "/public/" + "edit.html");
-})
-app.get('/listBooksBy', function (req, res) {
-    res.sendFile(__dirname + "/public/listBooksBy.html");
 })
 /*********************************************************************
 End of Pages

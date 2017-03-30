@@ -14,7 +14,7 @@
                 <a class="navbar-brand" href="#">Könyvtár</a>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#" ng-click="closeAll()">Home</a></li>
+                <li class="active"><a href="#">Home</a></li>
                 <li><a href="#" ng-click="list()">List Books</a></li>
                 <li><a href="#" ng-click="list3()">List Books By</a></li>
                 <li><a href="#" ng-click="list2()">List Lends</a></li>
@@ -23,13 +23,13 @@
             </ul>
         </div>
     </nav>
-    <div id="user">
-        Welcome
+    <div>
+        <h1 id="user">Welcome </h1>
     </div>
-    <div id="edit">
+    <div id="edit" ng-show="editDiv" ng-include="'edit'">
 
     </div>
-    <div id="lends" class="container">
+    <div id="lends" class="container" ng-show="lendsDiv">
         <div ng-repeat="x in lends">
             Lends<br />
             <table border="1" class="table table-hover">
@@ -46,7 +46,7 @@
             </table>
         </div>
     </div>
-    <div id="bookList">
+    <div id="bookList" ng-show="bookListDiv">
         <div class="container">
             <div ng-repeat="x in books">
                 <table border="1" class="table table-hover">
@@ -78,7 +78,7 @@
             </div>
         </div>
     </div>
-    <div id="bookListBy">
+    <div id="bookListBy" ng-show="bookListByDiv">
         <div class="container">
             <h2>List by Genre</h2>
             <form action="http://127.0.0.1:8081/listByGenre" method="GET">
@@ -145,63 +145,57 @@
                 $http.get('genres').then(function (response) { $scope.genres = response.data });
                 $http.get('authors').then(function (response) { $scope.authors = response.data });
                 $http.get('status').then(function (response) { $scope.status = response.data });
-                $http.get('listBy').then(function (response) {
-                    $scope.books = response.data.books
-                });
+                $http.get('listBy').then(function (response) { $scope.books = response.data.books });
                 $http.get('user').then(function (response) { document.getElementById('user').innerHTML += response.data.userName; });
-                for (var i = 0; i < contentList.length; i++) {
-                    contentList[i].hidden = true;
-                }
                 $http.get('page').then(function (response) {
-                    document.getElementById(response.data).hidden = false;
+                    switch (response.data) {
+                        case "bookListBy":
+                            $scope.bookListByDiv = true;
+                            break;
+                        case "bookList":
+                            $scope.bookListDiv = true;
+                            break;
+                        case "edit":
+                            $scope.editDiv = true;
+                            break;
+                    }
                 })
             });
             $scope.list3 = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-                document.getElementById('bookListBy').hidden = false;
+                $scope.editDiv = false;
+                $scope.lendsDiv = false;
+                $scope.bookListDiv = false;
+                $scope.bookListByDiv = true;
             }
-            $scope.closeAll = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-            }
+
             $scope.list = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-                document.getElementById('bookList').hidden = false;
+                $scope.editDiv = false;
+                $scope.lendsDiv = false;
+                $scope.bookListDiv = true;
+                $scope.bookListByDiv = false;
                 $http.get('books').then(function (response) {
                     $scope.books = response.data.books
                 });
             }
             $scope.list2 = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-                document.getElementById('lends').hidden = false;
+                $scope.editDiv = false;
+                $scope.lendsDiv = true;
+                $scope.bookListDiv = false;
+                $scope.bookListByDiv = false;
                 $http.get('myLends').then(function (response) {
                     $scope.lends = response.data.a;
                 })
             }
             $scope.edit = function () {
-                for (var i = 0; i < contentList.length; i++) {
-                    if (contentList[i].hidden == false)
-                        contentList[i].hidden = true;
-                }
-                document.getElementById('edit').hidden = false;
-                $http.get('edit').then(function (response) {
-                    document.getElementById('edit').innerHTML = response.data;
-                    $http.get('user').then(function (response) {
-                        document.getElementById('userName').value += response.data.userName;
-                        document.getElementById('age').value = response.data.age;
-                        document.getElementById('name').value = response.data.name;
-                    });
+                $scope.editDiv = true;
+                $scope.lendsDiv = false;
+                $scope.bookListDiv = false;
+                $scope.bookListByDiv = false;
+
+                $http.get('user').then(function (response) {
+                    document.getElementById('userName').value += response.data.userName;
+                    document.getElementById('age').value = response.data.age;
+                    document.getElementById('name').value = response.data.name;
                 });
             }
             $scope.logout = function () {
