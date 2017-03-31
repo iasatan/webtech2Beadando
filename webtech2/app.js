@@ -158,7 +158,12 @@ app.get('/editResponse', function (req, res) {
     user.userName = req.query.userName;
     user.age = req.query.age;
     user.name = req.query.name;
-    res.sendFile(__dirname + "/public/" + "index.html");
+    if (user.type == "Librarian") {
+        res.sendFile(__dirname + "/public/Librarian.html");   
+    }
+    else {
+        res.sendFile(__dirname + "/public/" + "index.html");
+    }
 })
 app.get('/requestBook', function (req, res) {
     var lol = true;

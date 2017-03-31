@@ -23,8 +23,8 @@
             </ul>
         </div>
     </nav>
-    <div id="user">
-        Welcome
+    <div>
+        <h1>Welcome {{userName}}</h1>
     </div>
     <div id="manageBooks" class="container" ng-show="manageBooksDiv">
         <form name="addBookForm" action="http://127.0.0.1:8081/addBook" method="GET">
@@ -133,11 +133,14 @@
     </div>
     <br />
     <script>
-        var contentList = [document.getElementById('edit'), document.getElementById('manageBooks'), document.getElementById('manageInventory'), document.getElementById('requests')];
         var index = angular.module("index", []);
         index.controller("indexCtrl", function ($scope, $http) {
             angular.element(document).ready(function () {
-                $http.get('user').then(function (response) { document.getElementById('user').innerHTML += response.data.userName; });
+                $http.get('user').then(function (response) {
+                    $scope.userName = response.data.userName;
+                    $scope.age = response.data.age;
+                    $scope.realName = response.data.name;
+                });
                 $http.get('authors').then(function (response) { $scope.authors = response.data });
                 $http.get('books').then(function (response) { $scope.inventorryBooks = response.data.books });
                 $http.get('requests').then(function (response) {
@@ -183,22 +186,15 @@
                 $scope.editDiv = false;
             }
 
-
             $scope.edit = function () {
                 $scope.requestsDiv = false;;
                 $scope.manageBooksDiv = false;
                 $scope.manageInventoryDiv = false;
                 $scope.editDiv = true;
-                $http.get('user').then(function (response) {
-                    document.getElementById('userName').value += response.data.userName;
-                    document.getElementById('age').value = response.data.age;
-                    document.getElementById('name').value = response.data.name;
-                });
             }
             $scope.logout = function () {
                 open('logout', "_self");
             }
-
         });
     </script>
 </body>

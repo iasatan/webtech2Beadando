@@ -24,7 +24,7 @@
         </div>
     </nav>
     <div>
-        <h1 id="user">Welcome </h1>
+        <h1>Welcome {{userName}}</h1>
     </div>
     <div id="edit" ng-show="editDiv" ng-include="'edit'">
 
@@ -138,7 +138,6 @@
         </div>
     </div>
     <script>
-        var contentList = [document.getElementById('edit'), document.getElementById('lends'), document.getElementById('bookList'), document.getElementById('bookListBy')];
         var index = angular.module("index", []);
         index.controller("indexCtrl", function ($scope, $http, $compile) {
             angular.element(document).ready(function () {
@@ -146,7 +145,11 @@
                 $http.get('authors').then(function (response) { $scope.authors = response.data });
                 $http.get('status').then(function (response) { $scope.status = response.data });
                 $http.get('listBy').then(function (response) { $scope.books = response.data.books });
-                $http.get('user').then(function (response) { document.getElementById('user').innerHTML += response.data.userName; });
+                $http.get('user').then(function (response) {
+                    $scope.userName = response.data.userName;
+                    $scope.age = response.data.age;
+                    $scope.realName = response.data.name;
+                });
                 $http.get('page').then(function (response) {
                     switch (response.data) {
                         case "bookListBy":
@@ -191,17 +194,10 @@
                 $scope.lendsDiv = false;
                 $scope.bookListDiv = false;
                 $scope.bookListByDiv = false;
-
-                $http.get('user').then(function (response) {
-                    document.getElementById('userName').value += response.data.userName;
-                    document.getElementById('age').value = response.data.age;
-                    document.getElementById('name').value = response.data.name;
-                });
             }
             $scope.logout = function () {
                 open('logout', "_self");
             }
-
         });
     </script>
 </body>
