@@ -3,201 +3,212 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Library</title>
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/angular-route.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
-<body ng-app="index" ng-controller="indexCtrl">
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Könyvtár</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#" ng-click="list()">List Books</a></li>
-                <li><a href="#" ng-click="list3()">List Books By</a></li>
-                <li><a href="#" ng-click="list2()">List Lends</a></li>
-                <li><a href="#" ng-click="edit()">Edit User</a></li>
-                <li><a href="#" ng-click="logout()">Log Out</a></li>
-            </ul>
-        </div>
-    </nav>
-    <div>
-        <h1>Welcome {{userName}}</h1>
-    </div>
-    <div id="edit" ng-show="editDiv" ng-include="'edit'">
+<body ng-app="library" ng-controller="libraryCtrl">
+    <div ng-include="'navbar.html'"></div>
+    <div ng-view></div>
 
-    </div>
-    <div id="lends" class="container" ng-show="lendsDiv">
-        <div ng-repeat="x in lends">
-            Lends<br />
-            <table border="1" class="table table-hover">
-                <tbody>
-                    <tr>
-                        <td>User Name:</td>
-                        <td>{{ x.name }}</td>
-                    </tr>
-                    <tr>
-                        <td>Book name:</td>
-                        <td>{{ x.book }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div id="bookList" ng-show="bookListDiv">
-        <div class="container">
-            <div ng-repeat="x in books">
-                <table border="1" class="table table-hover">
-                    <tbody>
-                        <tr>
-                            <td>Name:</td>
-                            <td>{{ x.name }}</td>
-                        </tr>
-                        <tr>
-                            <td>Genre:</td>
-                            <td>{{ x.genre }}</td>
-                        </tr>
-                        <tr>
-                            <td>Author:</td>
-                            <td>{{ x.author }}</td>
-                        </tr>
-                        <tr>
-                            <td>Available:</td>
-                            <td>
-                                {{x.status}} <form action="http://127.0.0.1:8081/requestBook" method="GET">
-                                    <input hidden="hidden" name="name" value="{{ x.name }}" />
-                                    <input type="submit" class="btn" value="Request">
-                                </form>
-                            </td>
-
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div id="bookListBy" ng-show="bookListByDiv">
-        <div class="container">
-            <h2>List by Genre</h2>
-            <form action="http://127.0.0.1:8081/listByGenre" method="GET">
-                <div class="form-group">
-                    <select name="genre"><option ng-repeat="x in genres">{{x}}</option></select>
-                </div>
-                <input type="submit" class="btn" value="Submit">
-            </form>
-        </div>
-        <div class="container">
-            <h2>List by Author</h2>
-            <form action="http://127.0.0.1:8081/listByAuthor" method="GET">
-                <div class="form-group">
-                    <select name="author"><option ng-repeat="x in authors">{{x}}</option></select>
-                </div>
-                <input type="submit" class="btn" value="Submit">
-            </form>
-        </div>
-        <div class="container">
-            <h2>List By status</h2>
-            <form action="http://127.0.0.1:8081/listByStatus" method="GET">
-                <div class="form-group">
-                    <select name="status"><option ng-repeat="x in status">{{x}}</option></select>
-                </div>
-                <input type="submit" class="btn" value="Submit">
-            </form>
-        </div>
-        <div id="bookList" class="container">
-            <div ng-repeat="x in books">
-                <table border="1" class="table table-hover">
-                    <tbody>
-                        <tr>
-                            <td>Name:</td>
-                            <td>{{ x.name }}</td>
-                        </tr>
-                        <tr>
-                            <td>Genre:</td>
-                            <td>{{ x.genre }}</td>
-                        </tr>
-                        <tr>
-                            <td>Author:</td>
-                            <td>{{ x.author }}</td>
-                        </tr>
-                        <tr>
-                            <td>Available:</td>
-                            <td>
-                                {{x.status}} <form action="http://127.0.0.1:8081/requestBook2" method="GET">
-                                    <input hidden="hidden" name="name" value="{{ x.name }}" />
-                                    <input type="submit" class="btn" value="Request">
-                                </form>
-                            </td>
-
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
     <script>
-        var index = angular.module("index", []);
-        index.controller("indexCtrl", function ($scope, $http, $compile) {
-            angular.element(document).ready(function () {
-                $http.get('genres').then(function (response) { $scope.genres = response.data });
-                $http.get('authors').then(function (response) { $scope.authors = response.data });
-                $http.get('status').then(function (response) { $scope.status = response.data });
-                $http.get('listBy').then(function (response) { $scope.books = response.data.books });
-                $http.get('user').then(function (response) {
-                    $scope.userName = response.data.userName;
-                    $scope.age = response.data.age;
-                    $scope.realName = response.data.name;
+        var library = angular.module("library", ["ngRoute"]);
+        library.config(function ($routeProvider) {
+            $routeProvider
+                .when("/", {
+                    templateUrl: "home.html"
+                })
+                .when("/login", {
+                    templateUrl: "login.html",
+                    controller: "userController"
+                })
+                .when("/welcome", {
+                    templateUrl: "welcome.html"
+                })
+                .when("/editUser", {
+                    templateUrl: "editUser.html",
+                    controller: "userController"
+                })
+                .when("/bookList", {
+                    templateUrl: "bookList.html",
+                    controller: "bookController"
+                })
+                .when("/addBook", {
+                    templateUrl: "addBook.html",
+                    controller: "bookController"
+                })
+                .when("/addBookInstance", {
+                    templateUrl: "addBookInstance.html",
+                    controller: "bookController"
+                })
+                .when("/manageRentals", {
+                    templateUrl: "manageRentals.html",
+                    controller: "bookController"
+                })
+                .when("/addAuthor", {
+                    templateUrl: "addAuthor.html",
+                    controller: "authorController"
+                })
+                .otherwise({
+                    redirectTo: "/"
                 });
-                $http.get('page').then(function (response) {
-                    switch (response.data) {
-                        case "bookListBy":
-                            $scope.bookListByDiv = true;
-                            break;
-                        case "bookList":
-                            $scope.bookListDiv = true;
-                            break;
-                        case "edit":
-                            $scope.editDiv = true;
-                            break;
+        });
+        
+        library.directive("bookAvailableDirective", function () {
+            return {
+                restrict: "EA",
+                scope: {
+                    available: "@",
+                    quantity: "@"
+                },
+                templateUrl: "bookAvailable.html"
+            };
+        });
+        
+        library.controller("libraryCtrl", function ($scope, $rootScope, $http, $location) {
+            $rootScope.newuser = {};
+            $rootScope.$on("$routeChangeStart", function (event, next, current) {
+                $http.get("/user").then(function (response) {
+                    $rootScope.user = angular.copy(response.data);
+                    if ($rootScope.user === "") {
+                        $rootScope.user = undefined;
                     }
-                })
-            });
-            $scope.list3 = function () {
-                $scope.editDiv = false;
-                $scope.lendsDiv = false;
-                $scope.bookListDiv = false;
-                $scope.bookListByDiv = true;
-            }
-
-            $scope.list = function () {
-                $scope.editDiv = false;
-                $scope.lendsDiv = false;
-                $scope.bookListDiv = true;
-                $scope.bookListByDiv = false;
-                $http.get('books').then(function (response) {
-                    $scope.books = response.data.books
                 });
-            }
-            $scope.list2 = function () {
-                $scope.editDiv = false;
-                $scope.lendsDiv = true;
-                $scope.bookListDiv = false;
-                $scope.bookListByDiv = false;
-                $http.get('myLends').then(function (response) {
-                    $scope.lends = response.data.a;
-                })
-            }
-            $scope.edit = function () {
-                $scope.editDiv = true;
-                $scope.lendsDiv = false;
-                $scope.bookListDiv = false;
-                $scope.bookListByDiv = false;
-            }
+                if (next.originalPath === "") {
+                    // NOTHING TO DO
+                } else if ($rootScope.user === undefined && next.originalPath !== "/" && next.originalPath !== "/login") {
+                    $location.path("/login");
+                } else if ($rootScope.user !== undefined && next.originalPath === "/login") {
+                    $location.path("/");
+                } else {
+                    // IDK WHAT TO DO
+                }
+            });
+        });
+        library.controller("userController", function ($scope, $rootScope, $http, $location) {
+            $scope.login = function () {
+                console.log($rootScope.newuser);
+                $http.post("/login", $rootScope.newuser).then(
+                    function (response) {
+                        $scope.statusCode = response.status;
+                        if ($scope.statusCode === 200) {
+                            $rootScope.user = angular.copy(response.data);
+                            if ($rootScope.user === "") {
+                                $rootScope.user = undefined;
+                            }
+                            $rootScope.newuser = {};
+                            $location.path("/welcome");
+                        }
+                    },
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    }
+                );
+            };
             $scope.logout = function () {
-                open('logout', "_self");
-            }
+                $http.post("/logout").then(
+                    function (response) {
+                        $scope.statusCode = response.status;
+                        $location.path("/");
+                    },
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    }
+                );
+                $rootScope.user = undefined;
+            };
+            $scope.edit = function () {
+                console.log($scope.moduser);
+                $http.post("/editUser", $scope.moduser).then(
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    },
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    }
+                );
+            };
+        });
+        library.controller("bookController", function ($scope, $http) {
+            $http.get("/authors").then(function (response) {
+                $scope.authors = response.data;
+            });
+            $http.get("/books").then(function (response) {
+                $scope.books = response.data;
+            });
+            $http.get("/genres").then(function (response) {
+                $scope.genres = response.data;
+            });
+            $http.get("/requests").then(function (response) {
+                $scope.requests = response.data;
+            });
+            $scope.availabilityFilter = function (book) {
+                return !$scope.available || book.available > 0;
+            };
+            $scope.addBook = function () {
+                $http.post("/addBook", $scope.book).then(
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    },
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    }
+                );
+            };
+            $scope.addBookInstance = function () {
+                $scope.book.quantity = $scope.quantity;
+                $http.post("/addBookInstance", $scope.book).then(
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    },
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    }
+                );
+            };
+            $scope.viewBook = function (book) {
+                $scope.book = book;
+            };
+            $scope.requestBook = function () {
+                $http.post("/requestBook", $scope.book).then(
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    },
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    }
+                );
+            };
+            $scope.lendBook = function (request) {
+                $scope.request = request;
+                $http.post("/lendBook", $scope.request).then(
+                    function (response) {
+                        $scope.statusCode = response.status;
+                        $http.get("/requests").then(function (response) {
+                            $scope.requests = response.data;
+                        });
+                    },
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    }
+                );
+            };
+        });
+        library.controller("authorController", function ($scope, $http) {
+            $scope.addAuthor = function () {
+                $http.post("/addAuthor", $scope.author).then(
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    },
+                    function (response) {
+                        $scope.statusCode = response.status;
+                    }
+                );
+            };
         });
     </script>
 </body>

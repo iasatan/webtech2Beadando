@@ -28,27 +28,49 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="public\js\angular-route.js" />
     <Compile Include="public\js\angular.min.js" />
     <Compile Include="app.js" />
-    <Content Include="public\css\bootstrap.min.css" />
-    <Content Include="public\edit.html">
+    <Compile Include="public\js\bootstrap.min.js">
       <SubType>Code</SubType>
-    </Content>
+    </Compile>
+    <Compile Include="public\js\jquery.min.js" />
+    <Compile Include="userService.js" />
+    <Content Include="authors.json" />
+    <Content Include="books.json" />
+    <Content Include="genres.json" />
+    <Content Include="public\addAuthor.html" />
+    <Content Include="public\addBook.html" />
+    <Content Include="public\addBookInstance.html" />
+    <Content Include="public\bookAvailable.html" />
+    <Content Include="public\bookList.html" />
+    <Content Include="public\css\bootstrap.min.css" />
+    <Content Include="public\editUser.html" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="public\header.html" />
+    <Content Include="public\home.html" />
     <Content Include="public\index.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Képkivágás.PNG" />
-    <Content Include="public\Librarian.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="public\login.html">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="package.json" />
+    <Content Include="public\login.html" />
+    <Content Include="public\manageRentals.html" />
+    <Content Include="public\navBar.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="public\welcome.html" />
     <Content Include="README.md" />
+    <Content Include="requests.json" />
+    <Content Include="user.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />
+    <Folder Include="public\fonts\" />
     <Folder Include="public\js\" />
     <Folder Include="public\css\" />
   </ItemGroup>

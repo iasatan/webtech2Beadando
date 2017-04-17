@@ -1,23 +1,23 @@
-﻿<html>
-<head>
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-</head>
-<body>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Könyvtár</a>
-            </div>
-        </div>
-    </nav>
-    <div class="container">
-        <h2>Log In</h2>
-        <form action="http://127.0.0.1:8081/login" method="GET">
-            <div class="form-group">
-                <input type="text" class="form-control" name="userName" placeholder="Enter your User Name">
-            </div>
-            <input type="submit" class="btn" value="Submit">
-        </form>
-    </div>
-</body>
-</html>
+<div class="container-fluid">
+	<div ng-if="statusCode == 401">
+		<div class="alert alert-warning">
+			<p><strong>Warning!</strong> Incorrect username or password.</p>
+		</div>
+	</div>
+	<div ng-if="statusCode >= 500">
+		<div class="alert alert-dander">
+			<p><strong>Error {{ statusCode }}!</strong> Oops! Something went wrong. Try again later!</p>
+		</div>
+	</div>
+	<form ng-submit="login()">
+		<div class="form-group">
+			<label>Username:</label>
+			<input type="text" ng-model="newuser.username" class="form-control" placeholder="Enter your username." />
+		</div>
+		<div class="form-group">
+			<label>Password:</label>
+			<input type="password" ng-model="newuser.password" class="form-control" placeholder="Enter your password." />
+		</div>
+		<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-log-in"></i> Login</button>
+	</form>
+</div>
