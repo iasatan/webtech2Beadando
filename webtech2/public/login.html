@@ -1,3 +1,10 @@
+<link rel="stylesheet" href="css/form-elements.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="shortcut icon" href="ico/favicon.png">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
 <div class="container-fluid">
 	<div ng-if="statusCode == 401">
 		<div class="alert alert-warning">
@@ -9,15 +16,31 @@
 			<p><strong>Error {{ statusCode }}!</strong> Oops! Something went wrong. Try again later!</p>
 		</div>
 	</div>
-	<form ng-submit="login()">
-		<div class="form-group">
-			<label>Username:</label>
-			<input type="text" ng-model="newuser.username" class="form-control" placeholder="Enter your username." />
-		</div>
-		<div class="form-group">
-			<label>Password:</label>
-			<input type="password" ng-model="newuser.password" class="form-control" placeholder="Enter your password." />
-		</div>
-		<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-log-in"></i> Login</button>
-	</form>
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 form-box">
+            <div class="form-top">
+                <div class="form-top-left">
+                    <h3>Login to our site</h3>
+                    <p>Enter your username and password to log on:</p>
+                    
+                </div>
+                <div class="form-top-right">
+                    <i class="fa fa-lock"></i>
+                </div>
+            </div>
+            <div class="form-bottom">
+                <form role="form" ng-submit="login()" class="login-form">
+                    <div class="form-group">
+                        <label class="sr-only" for="form-username">Username</label>
+                        <input type="text" ng-model="newuser.username" placeholder="Username..." class="form-username form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="form-password">Password</label>
+                        <input type="password" ng-model="newuser.password" placeholder="Password..." class="form-password form-control">
+                    </div>
+                    <button type="submit" class="btn">Sign in!</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

@@ -32,7 +32,19 @@ app.get('/requests', function (req, res) {
     res.send(requests);
 })
 app.get("/genres", function (req, res) {
-    var genres = JSON.parse(fs.readFileSync(__dirname + "/genres.json", "utf8"));
+    var books = JSON.parse(fs.readFileSync(__dirname + "/books.json", "utf8"));
+    var genres = [];
+    for (var i = 0; i < books.length; i++) {
+        genres.push(books[i].genre);
+    }
+    for (var i = 0; i < genres.length; i++) {
+        for (var j = 0; j < genres.length; j++) {
+            if (genres[i] == genres[j] && i!=j) {
+                genres.splice(j, 1);
+                j--;
+            }
+        }
+    }
     res.send(genres);
 });
 
@@ -107,7 +119,7 @@ app.post('/addBook', function (req, res) {
             return;
         }
     }
-    var book = {"title": req.body.title, "genre": req.query.genre,"author": req.body.author.author, "quantity": 0, "available": 0 };
+    var book = {"title": req.body.title, "genre": req.body.genre,"author": req.body.author.name, "quantity": 0, "available": 0 };
     books.push(book);
     fs.writeFileSync(__dirname + "/books.json", JSON.stringify(books), "utf8");
     res.end();
@@ -181,113 +193,6 @@ app.post('/lendBook', function (req, res) {
     fs.writeFileSync(__dirname + "/requests.json", JSON.stringify(requests), "utf8");
     res.end();
 })
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-app.get('/manageInventory', function (req, res) {
-    if (librarian) {
-        res.sendFile(__dirname + "/public/manageInventory.html");
-    }
-})
-app.get('/requestsPage', function (req, res) {
-    if (librarian) {
-        res.sendFile(__dirname + "/public/requests.html");
-    }
-})
-app.get('/manageBooks', function (req, res) {
-    if (librarian) {
-        res.sendFile(__dirname + "/public/manageBooks.html");
-    }
-})
-
-
-
-app.get('/lends', function (req, res) {
-    if (librarian) {
-        res.send(lends);
-    }
-})
-
-app.get('/genres', function (req, res) {
-    var genres = [];
-    for (var i = 0; i < books['books'].length; i++) {
-        genres.push(books['books'][i].genre);
-    }
-    res.send(genres);
-})
-app.get('/myLends', function (req, res) {
-    var tmp2JSON = { a: [] };
-    for (var i = 0; i < lends['lends'].length; i++) {
-        if (lends['lends'][i].name == user.userName) {
-            tmp2JSON['a'].push(lends['lends'][i]);
-        }
-    }
-    res.send(tmp2JSON);
-})
-app.get('/listByGenre', function (req, res) {
-    listby['books'] = [];
-    for (var i = 0; i < books['books'].length; i++) {
-        if (books['books'][i].genre == req.query.genre) {
-            listby['books'].push(books['books'][i]);
-        }
-    }
-    res.sendFile(__dirname + "/public/index.html");
-    page = "bookListBy";
-})
-app.get('/listByAuthor', function (req, res) {
-    listby['books'] = [];
-    for (var i = 0; i < books['books'].length; i++) {
-        if (books['books'][i].author == req.query.author) {
-            listby['books'].push(books['books'][i]);
-        }
-    }
-    res.sendFile(__dirname + "/public/index.html");
-    page = "bookListBy";
-})
-app.get('/listByStatus', function (req, res) {
-    listby['books'] = [];
-    for (var i = 0; i < books['books'].length; i++) {
-        if (books['books'][i].status == req.query.status) {
-            listby['books'].push(books['books'][i]);
-        }
-    }
-    res.sendFile(__dirname + "/public/index.html");
-    page = "bookListBy";
-})
-app.get('/listBy', function(req, res) {
-    res.send(listby);
-})
-app.get('/status', function (req, res) {
-    var status = [];
-    for (var i = 0; i < books['books'].length; i++) {
-        status.push(books['books'][i].status);
-    }
-    res.send(status);
-})
-
-
-app.get('/requestBook2', function (req, res) {
-    requests['request'].push({ "user": user.userName, "book": req.query.name });
-    res.sendFile(__dirname + "/public/" + "index.html");
-    page = "bookListBy";
-})
-
-
-
-app.get('/edit', function (req, res) {
-    res.sendFile(__dirname + "/public/" + "edit.html");
-})
-*/
 
 var server = app.listen(8081, function () {
     var host = server.address().address

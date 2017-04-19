@@ -1,5 +1,4 @@
 ﻿<!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
@@ -20,9 +19,6 @@
         library.config(function ($routeProvider) {
             $routeProvider
                 .when("/", {
-                    templateUrl: "home.html"
-                })
-                .when("/login", {
                     templateUrl: "login.html",
                     controller: "userController"
                 })
@@ -54,7 +50,7 @@
                     controller: "authorController"
                 })
                 .otherwise({
-                    redirectTo: "/"
+                    redirectTo: "/welcome"
                 });
         });
         
@@ -79,13 +75,10 @@
                     }
                 });
                 if (next.originalPath === "") {
-                    // NOTHING TO DO
                 } else if ($rootScope.user === undefined && next.originalPath !== "/" && next.originalPath !== "/login") {
                     $location.path("/login");
                 } else if ($rootScope.user !== undefined && next.originalPath === "/login") {
                     $location.path("/");
-                } else {
-                    // IDK WHAT TO DO
                 }
             });
         });

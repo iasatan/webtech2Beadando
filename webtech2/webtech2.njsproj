@@ -38,13 +38,14 @@
     <Compile Include="userService.js" />
     <Content Include="authors.json" />
     <Content Include="books.json" />
-    <Content Include="genres.json" />
     <Content Include="public\addAuthor.html" />
     <Content Include="public\addBook.html" />
     <Content Include="public\addBookInstance.html" />
     <Content Include="public\bookAvailable.html" />
     <Content Include="public\bookList.html" />
     <Content Include="public\css\bootstrap.min.css" />
+    <Content Include="public\css\form-elements.css" />
+    <Content Include="public\css\style.css" />
     <Content Include="public\editUser.html" />
     <Content Include="public\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="public\fonts\glyphicons-halflings-regular.svg" />
@@ -53,6 +54,11 @@
     <Content Include="public\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="public\header.html" />
     <Content Include="public\home.html" />
+    <Content Include="public\ico\apple-touch-icon-114-precomposed.png" />
+    <Content Include="public\ico\apple-touch-icon-144-precomposed.png" />
+    <Content Include="public\ico\apple-touch-icon-57-precomposed.png" />
+    <Content Include="public\ico\apple-touch-icon-72-precomposed.png" />
+    <Content Include="public\ico\favicon.png" />
     <Content Include="public\index.html">
       <SubType>Code</SubType>
     </Content>
@@ -73,6 +79,7 @@
     <Folder Include="public\fonts\" />
     <Folder Include="public\js\" />
     <Folder Include="public\css\" />
+    <Folder Include="public\ico\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
