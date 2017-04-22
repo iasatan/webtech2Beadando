@@ -35,7 +35,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="public\js\jquery.min.js" />
-    <Compile Include="userService.js" />
     <Content Include="authors.json" />
     <Content Include="books.json" />
     <Content Include="public\addAuthor.html" />
@@ -52,8 +51,6 @@
     <Content Include="public\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="public\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="public\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="public\header.html" />
-    <Content Include="public\home.html" />
     <Content Include="public\ico\apple-touch-icon-114-precomposed.png" />
     <Content Include="public\ico\apple-touch-icon-144-precomposed.png" />
     <Content Include="public\ico\apple-touch-icon-57-precomposed.png" />

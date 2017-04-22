@@ -95,8 +95,7 @@
 					<div ng-if="statusCode == 200">
 						<div class="alert alert-success">
 							<p>
-								<strong>Success!</strong> You've successfully requested {{
-								book.author }}'s {{ book.title }}. You have to wait for a
+								<strong>Success!</strong> You've successfully requested {{book.author }}'s {{ book.title }}. You have to wait for a
 								librarian to accept your request.
 							</p>
 						</div>
@@ -119,8 +118,7 @@
 					<div ng-if="statusCode >= 500">
 						<div class="alert alert-danger">
 							<p>
-								<strong>Error {{ statusCode }}!</strong> Oops! Something went
-								wrong. Try again later!
+								<strong>Error {{ statusCode }}!</strong> Server Error
 							</p>
 						</div>
 					</div>
